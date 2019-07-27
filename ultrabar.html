@@ -43,12 +43,14 @@
       center: [-77.0369, 38.9072],
       zoom: 13
     });
-    map.addControl(new MapboxDirections({
+    var mapdirs = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       controls: {
         profileSwitcher: false
       }
-    }), 'top-left');
+    })
+
+    map.addControl(mapdirs, 'top-left');
 
     map.addControl(new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -59,6 +61,7 @@
 
     map.on('load', function(){
       console.log('the map has been loaded!')
+      mapdirs.setDestination([-77.024612, 38.897629])
     })
   </script>
 

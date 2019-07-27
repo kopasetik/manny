@@ -36,19 +36,22 @@
   <div id='map'></div>
 
   <script>
-    mapboxgl.accessToken = 'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a3NtMGNscTAifQ.GV2nLN2sfnWbwBAD08sBLQ';
+    mapboxgl.accessToken =
+      'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a3NtMGNscTAifQ.GV2nLN2sfnWbwBAD08sBLQ';
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [-77.0369, 38.9072],
       zoom: 13
     });
-    map.addControl(new MapboxDirections({
+    var mapdirs = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       controls: {
         profileSwitcher: false
       }
-    }), 'top-left');
+    })
+
+    map.addControl(mapdirs, 'top-left');
 
     map.addControl(new mapboxgl.GeolocateControl({
       positionOptions: {
@@ -57,11 +60,12 @@
       trackUserLocation: false
     }), 'bottom-right')
 
-    map.on('load', function(){
+    map.on('load', function () {
       console.log('the map has been loaded!')
+      mapdirs.setDestination([-77.041153, 38.906559])
     })
   </script>
 
-</body>
+  </body>
 
-</html>
+  </html>
