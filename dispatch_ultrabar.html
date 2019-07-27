@@ -22,13 +22,47 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-90.0715, 29.9511],
+    center: [-77.024612, 38.89762],
     zoom: 13
 });
 
-map.addControl(new MapboxDirections({
+var mapdirz = new MapboxDirections({
     accessToken: mapboxgl.accessToken
-}), 'top-left');
+})
+
+map.addControl(mapdirz, 'top-left');
+var stops =[];
+map.on('load', function(){
+      var request = new XMLHttpRequest();
+      request.open('GET', 'https://api.myjson.com/bins/1cdz25', true);
+
+      request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+           // Success!
+            var resp=this.response;
+            var parsed_resp=JSON.parse(resp)
+            stops=parsed_resp.stops
+            console.log(parsed_resp)
+            console.log(resp)
+            mapdirz.setOrigin(stops[0])
+            if(stops.length > 2){
+                stops.forEach((element,i) => {
+                    if (i != 0){
+                        mapdirz.addWaypoint(element)
+                    }
+                });
+            }
+            mapdirz.setDestination([-77.024612, 38.897629])
+        } else {
+
+        }
+        };
+    request.onerror=function() {
+                  // There was a connection error of some sort
+                  };
+
+    request.send();
+        })
 </script>
 
 </body>
