@@ -36,8 +36,8 @@
   <div id='map'></div>
 
   <script>
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a3NtMGNscTAifQ.GV2nLN2sfnWbwBAD08sBLQ';
+    var stops;
+    mapboxgl.accessToken = 'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a3NtMGNscTAifQ.GV2nLN2sfnWbwBAD08sBLQ';
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -60,12 +60,48 @@
       trackUserLocation: false
     }), 'bottom-right')
 
-    map.on('load', function () {
+    map.on('load', function(){
       console.log('the map has been loaded!')
+      var request = new XMLHttpRequest();
+      request.open('GET', 'https://api.myjson.com/bins/1cdz25', true);
+
+      request.onload = function() {
+        if (this.status >= 200 && this.status < 400) {
+          // Success!
+          var resp=this.response;
+          var parsed_resp = JSON.parse(resp)
+          stops = parsed_resp.stops
+          console.log(stops)
+          var request2 = new XMLHttpRequest()
+          request2.open('PUT', 'https://api.myjson.com/bins/1cdz25', true)
+          request2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+          request2.send(JSON.stringify({stops:[]}))
+        } else {
+
+        }
+      };
+
+      request.onerror=function() {
+        // There was a connection error of some sort
+        };
+
+      request.send();
       mapdirs.setDestination([-77.042198, 38.906502])
     })
+
+    mapdirs.on('origin', function(){
+      console.log('orgin updated')
+      var origin = mapdirs.getOrigin()
+      var originLongLat = origin.geometry.coordinates
+      var request2 = new XMLHttpRequest()
+      request2.open('PUT', 'https://api.myjson.com/bins/1cdz25', true)
+      request2.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
+      stops.push(originLongLat)
+      request2.send(JSON.stringify({stops}))
+    })
+
   </script>
 
-  </body>
+</body>
 
-  </html>
+</html>
