@@ -22,13 +22,16 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoia29wYXNldGlrIiwiYSI6ImNqeWpjcnNrYTAyZGMzbXJ1a
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-77.024612, 38.89762],
-    zoom: 13
+    center: [-77.024612, 38.89762]
 });
 
 var mapdirz = new MapboxDirections({
     accessToken: mapboxgl.accessToken,
-    profile: 'mapbox/driving'
+    profile: 'mapbox/driving',
+    controls: {
+        profileSwitcher: false,
+        instructions: false
+    }
 })
 
 map.addControl(mapdirz, 'top-left');
